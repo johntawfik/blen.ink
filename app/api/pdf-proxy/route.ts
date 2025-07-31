@@ -15,6 +15,9 @@ export async function GET(request: NextRequest) {
     if (decodedUrl.includes('https://https:/')) {
       decodedUrl = decodedUrl.replace('https://https:/', 'https://')
     }
+    if (decodedUrl.includes('https:///https%3A')) {
+      decodedUrl = decodedUrl.replace('https:///https%3A', 'https://')
+    }
     
     new URL(decodedUrl)
     
