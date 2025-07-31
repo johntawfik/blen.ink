@@ -8,6 +8,7 @@ import SearchOverlay from "@/components/search-overlay"
 import ReadingProgressBar from "@/components/reading-progress-bar"
 import BookmarksPanel from "@/components/bookmarks-panel"
 import { readingProgress } from "@/lib/reading-progress"
+import { useIsMobile } from '@/hooks/use-mobile'
 
 interface PDFViewerClientProps {
   pdfUrl: string
@@ -20,19 +21,25 @@ interface LoadedPage extends PDFPage {
 }
 
 export default function PDFViewerClient({ pdfUrl, startPage = 1 }: PDFViewerClientProps) {
+  const isMobile = useIsMobile()
   const [pdfDocument, setPdfDocument] = useState<any>(null)
   const [totalPages, setTotalPages] = useState(0)
   const [loadedPages, setLoadedPages] = useState<Map<number, LoadedPage>>(new Map())
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [currentPage, setCurrentPage] = useState(startPage)
-  const [zoom, setZoom] = useState(1.6)
+  const [zoom, setZoom] = useState(isMobile ? 1.0 : 1.6)
   const [searchOpen, setSearchOpen] = useState(false)
   const [bookmarksOpen, setBookmarksOpen] = useState(false)
   const [allPageTexts, setAllPageTexts] = useState<Map<number, string>>(new Map())
   const [lastSearchPage, setLastSearchPage] = useState<number | null>(null)
   const pageRefs = useRef<(HTMLDivElement | null)[]>([])
   const observerRef = useRef<IntersectionObserver | null>(null)
+
+  // Update zoom when mobile state changes
+  useEffect(() => {
+    setZoom(isMobile ? 1.0 : 1.6)
+  }, [isMobile])
 
   // Load PDF document and extract all text content for fast search
   useEffect(() => {
@@ -496,7 +503,7 @@ export default function PDFViewerClient({ pdfUrl, startPage = 1 }: PDFViewerClie
       </div>
 
       {/* PDF Pages */}
-      <div className="min-h-full py-8">
+      <div className={`min-h-full ${isMobile ? 'py-1' : 'py-8'}`}>
         <div className="flex flex-col items-center ">
           {Array.from({ length: totalPages }, (_, index) => {
             const pageNumber = index + 1
@@ -515,9 +522,9 @@ export default function PDFViewerClient({ pdfUrl, startPage = 1 }: PDFViewerClie
                 data-page={pageNumber}
                 className="flex justify-center"
                 style={{
-                  minHeight: `${1000 * zoom}px`,
+                  minHeight: isMobile ? 'auto' : `${1000 * zoom}px`,
                   width: '100%',
-                  paddingBottom: `${50 * zoom}px`,
+                  paddingBottom: isMobile ? '4px' : `${30 * zoom}px`,
                 }}
               >
                                 <div
@@ -533,7 +540,8 @@ export default function PDFViewerClient({ pdfUrl, startPage = 1 }: PDFViewerClie
                         alt={`Page ${pageNumber}`}
                         className="block shadow-md bg-white border border-gray-200"
                         style={{ 
-                          width: '800px',
+                          width: isMobile ? '100vw' : '800px',
+                          maxWidth: isMobile ? 'calc(100vw - 32px)' : '800px',
                           height: 'auto',
                           display: 'block'
                         }}
@@ -542,7 +550,8 @@ export default function PDFViewerClient({ pdfUrl, startPage = 1 }: PDFViewerClie
                   ) : pageData?.isLoading ? (
                     <div className="flex items-center justify-center bg-white shadow-md border border-gray-200" 
                          style={{ 
-                           width: '800px',
+                           width: isMobile ? '100vw' : '800px',
+                           maxWidth: isMobile ? 'calc(100vw - 32px)' : '800px',
                            height: '1131px'
                          }}>
                       <div className="flex flex-col items-center gap-2 text-gray-500">
@@ -553,7 +562,8 @@ export default function PDFViewerClient({ pdfUrl, startPage = 1 }: PDFViewerClie
                   ) : (
                     <div className="flex items-center justify-center bg-white shadow-md border border-gray-200"
                          style={{ 
-                           width: '800px',
+                           width: isMobile ? '100vw' : '800px',
+                           maxWidth: isMobile ? 'calc(100vw - 32px)' : '800px',
                            height: '1131px'
                          }}>
                       <div className="text-center text-gray-400">
