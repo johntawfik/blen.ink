@@ -32,10 +32,10 @@ export async function generateMetadata({ params }: { params: Promise<{ url: stri
   
   return {
     title,
-    description: `Read and view ${fileName} online with blen - A better way to read PDFs from the internet`,
+    description: `Read and view ${fileName} online with blen - A better way to read PDFs`,
     openGraph: {
       title,
-      description: `Read and view ${fileName} online with blen - A better way to read PDFs from the internet`,
+      description: `Read and view ${fileName} online with blen - A better way to read PDFs`,
       url: `https://blen.ink/${encodeURIComponent(pdfUrl)}`,
       siteName: 'blen',
       type: 'article',
@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: { params: Promise<{ url: stri
     twitter: {
       card: 'summary_large_image',
       title,
-      description: `Read and view ${fileName} online with blen - A better way to read PDFs from the internet`,
+      description: `Read and view ${fileName} online with blen - A better way to read PDFs`,
       images: ['/leaf.png'],
     },
     robots: {

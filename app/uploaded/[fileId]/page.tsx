@@ -9,10 +9,10 @@ export async function generateMetadata({ params }: { params: Promise<{ fileId: s
   
   return {
     title,
-    description: `Read your uploaded PDF with blen - A better way to read PDFs online`,
+    description: `Read your uploaded PDF with blen - A better way to read PDFs`,
     openGraph: {
       title,
-      description: `Read your uploaded PDF with blen - A better way to read PDFs online`,
+      description: `Read your uploaded PDF with blen - A better way to read PDFs`,
       siteName: 'blen',
       type: 'article',
       images: ['/leaf.png'],
@@ -20,11 +20,11 @@ export async function generateMetadata({ params }: { params: Promise<{ fileId: s
     twitter: {
       card: 'summary_large_image',
       title,
-      description: `Read your uploaded PDF with blen - A better way to read PDFs online`,
+      description: `Read your uploaded PDF with blen - A better way to read PDFs`,
       images: ['/leaf.png'],
     },
     robots: {
-      index: false, // Don't index uploaded files
+      index: false, 
       follow: false,
     },
   }

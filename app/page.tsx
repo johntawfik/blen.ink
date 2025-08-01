@@ -199,7 +199,7 @@ export default function DupeApp() {
         {/* Tagline */}
         <p className={`text-xl md:text-2xl font-medium mb-8 transition-colors duration-2000 ease-out ${
           showImageBackground ? 'text-white' : 'text-gray-600'
-        }`}>A better way to read PDFs online</p>
+        }`}>A better way to read PDFs</p>
 
         {/* Search interface */}
         <div className="w-full max-w-2xl">

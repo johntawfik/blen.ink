@@ -6,7 +6,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'blen',
-  description: 'A better way to read PDFs from the internet',
+  description: 'A better way to read PDFs',
   generator: 'blen.ink',
   applicationName: 'blen',
   keywords: ['PDF', 'reader', 'document', 'online', 'viewer', 'reading'],
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'blen',
-    description: 'A better way to read PDFs from the internet',
+    description: 'A better way to read PDFs',
     url: 'https://blen.ink',
     siteName: 'blen',
     images: [
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
         url: '/leaf.png',
         width: 1200,
         height: 630,
-        alt: 'blen - A better way to read PDFs from the internet',
+        alt: 'blen - A better way to read PDFs',
       },
     ],
     locale: 'en_US',
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'blen',
-    description: 'A better way to read PDFs from the internet',
+    description: 'A better way to read PDFs',
     creator: '@blen',
     images: ['/leaf.png'],
   },
@@ -85,7 +85,7 @@ html {
               '@context': 'https://schema.org',
               '@type': 'WebApplication',
               name: 'blen',
-              description: 'A better way to read PDFs from the internet',
+              description: 'A better way to read PDFs',
               url: 'https://blen.ink',
               applicationCategory: 'ProductivityApplication',
               operatingSystem: 'Web',
