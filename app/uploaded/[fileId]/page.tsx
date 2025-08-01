@@ -4,7 +4,6 @@ import PDFViewerContent from "./pdf-viewer-content"
 
 export async function generateMetadata({ params }: { params: Promise<{ fileId: string }> }): Promise<Metadata> {
   const { fileId } = await params
-  
   const title = `Uploaded PDF - blen PDF Viewer`
   
   return {
