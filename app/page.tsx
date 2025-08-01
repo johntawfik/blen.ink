@@ -86,6 +86,8 @@ export default function DupeApp() {
         style={{
           backgroundImage: `url('/leaf.png')`,
         }}
+        role="img"
+        aria-label="Background featuring abstract leaf design"
       />
 
       {/* Top right reading list link */}
@@ -97,7 +99,7 @@ export default function DupeApp() {
               showImageBackground ? 'text-white' : 'text-gray-600'
             }`}
           >
-            <BookOpen className="h-5 w-5" />
+            <BookOpen className="h-5 w-5" aria-hidden="true" />
             <span className="text-lg font-medium">Currently Reading</span>
           </div>
         </div>
@@ -134,7 +136,7 @@ export default function DupeApp() {
                 variant="ghost"
                 onClick={handleSearch}
               >
-                <ArrowUp className="h-5 w-5" />
+                <ArrowUp className="h-5 w-5" aria-hidden="true" />
               </Button>
             </div>
           </div>

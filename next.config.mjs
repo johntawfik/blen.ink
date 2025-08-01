@@ -8,6 +8,7 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+    formats: ['image/webp', 'image/avif'],
   },
   // Webpack configuration for PDF.js
   webpack: (config, { isServer, dev }) => {
@@ -44,7 +45,7 @@ const nextConfig = {
 
     return config;
   },
-  // Ensure PDF worker file is properly served
+  // Ensure PDF worker file is properly served and add performance headers
   async headers() {
     return [
       {
@@ -53,6 +54,23 @@ const nextConfig = {
           {
             key: 'Content-Type',
             value: 'application/javascript',
+          },
+        ],
+      },
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
           },
         ],
       },
