@@ -2,8 +2,9 @@ import React from "react"
 import { Metadata } from "next"
 import PDFViewerContent from "./pdf-viewer-content"
 
-export function generateMetadata({ params }: { params: { url: string[] } }): Metadata {
-  const urlSegments = params.url as string[]
+export async function generateMetadata({ params }: { params: Promise<{ url: string[] }> }): Promise<Metadata> {
+  const { url } = await params
+  const urlSegments = url as string[]
   let pdfUrl: string
   let title: string
   
@@ -53,6 +54,6 @@ export function generateMetadata({ params }: { params: { url: string[] } }): Met
   }
 }
 
-export default function PDFViewer({ params }: { params: { url: string[] } }) {
+export default function PDFViewer({ params }: { params: Promise<{ url: string[] }> }) {
   return <PDFViewerContent params={params} />
 } 
