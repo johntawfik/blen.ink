@@ -9,19 +9,14 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Handle malformed double-encoded URLs
+    // Handle double-encoded URLs by decoding twice
     let decodedUrl = decodeURIComponent(url)
-
-    if (decodedUrl.includes('https://https:/')) {
-      decodedUrl = decodedUrl.replace('https://https:/', 'https://')
-    }
-    if (decodedUrl.includes('https:///https%3A')) {
-      decodedUrl = decodedUrl.replace('https:///https%3A', 'https://')
-    }
-    if (decodedUrl.includes('https:////https%253A/')) {
-      decodedUrl = decodedUrl.replace('https:////https%253A/', 'https://')
-    }
+    decodedUrl = decodeURIComponent(decodedUrl)
     
+    // Fix malformed duplicate protocols like "https://https:/" or "https://https://"
+    decodedUrl = decodedUrl.replace(/^https?:\/\/https?:\/?\/?/, 'https://')
+    
+    console.log('Fixed URL:', decodedUrl)
     new URL(decodedUrl)
     
     const response = await fetch(decodedUrl, {

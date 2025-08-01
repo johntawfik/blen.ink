@@ -67,7 +67,7 @@ export default function PDFViewerClient({ pdfUrl, startPage = 1 }: PDFViewerClie
 
         const loadingTask = pdfjs.getDocument({
           url: pdfUrl_processed,
-          cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/',
+          cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.54/cmaps/',
           cMapPacked: true,
         })
         
