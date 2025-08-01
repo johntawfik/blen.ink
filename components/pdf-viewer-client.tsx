@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef, useCallback } from "react"
-import { Loader2, AlertCircle, ZoomIn, ZoomOut, Search, Bookmark } from "lucide-react"
+import { Loader2, AlertCircle, ZoomIn, ZoomOut, Search, Bookmark, Home } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { loadPDFFromUrl, PDFTextContent, PDFPage } from "@/lib/pdf-utils"
 import SearchOverlay from "@/components/search-overlay"
@@ -9,6 +9,7 @@ import ReadingProgressBar from "@/components/reading-progress-bar"
 import BookmarksPanel from "@/components/bookmarks-panel"
 import { readingProgress } from "@/lib/reading-progress"
 import { useIsMobile } from '@/hooks/use-mobile'
+import { useRouter } from "next/navigation"
 
 interface PDFViewerClientProps {
   pdfUrl: string
@@ -22,6 +23,7 @@ interface LoadedPage extends PDFPage {
 
 export default function PDFViewerClient({ pdfUrl, startPage = 1 }: PDFViewerClientProps) {
   const isMobile = useIsMobile()
+  const router = useRouter()
   const [pdfDocument, setPdfDocument] = useState<any>(null)
   const [totalPages, setTotalPages] = useState(0)
   const [loadedPages, setLoadedPages] = useState<Map<number, LoadedPage>>(new Map())
@@ -56,10 +58,17 @@ export default function PDFViewerClient({ pdfUrl, startPage = 1 }: PDFViewerClie
 
         // Try direct access first, fallback to proxy if CORS issues
         let pdfUrl_processed = pdfUrl
+        let originalFilename: string | null = null
+        
         try {
           const testResponse = await fetch(pdfUrl, { method: 'HEAD' })
           if (!testResponse.ok) {
             throw new Error('Direct access failed')
+          }
+          
+          // Check if this is an uploaded file and extract original filename
+          if (pdfUrl.startsWith('/api/pdf-upload/')) {
+            originalFilename = testResponse.headers.get('X-Original-Filename')
           }
         } catch {
           pdfUrl_processed = `/api/pdf-proxy?url=${encodeURIComponent(pdfUrl)}`
@@ -80,21 +89,28 @@ export default function PDFViewerClient({ pdfUrl, startPage = 1 }: PDFViewerClie
         // Extract title from PDF metadata or fallback to filename
         let title = 'Untitled PDF'
         try {
-          const metadata = await pdf.getMetadata()
-          if (metadata.info && typeof metadata.info === 'object' && 'Title' in metadata.info && typeof metadata.info['Title'] === 'string' && metadata.info['Title'].trim()) {
-            title = metadata.info['Title'].trim()
+          // For uploaded files, use the original filename first
+          if (originalFilename) {
+            title = originalFilename.replace(/\.pdf$/i, '')
           } else {
-            const urlPath = new URL(pdfUrl).pathname
-            const filename = urlPath.split('/').pop() || 'document.pdf'
-            title = filename.replace(/\.pdf$/i, '')
+            const metadata = await pdf.getMetadata()
+            if (metadata.info && typeof metadata.info === 'object' && 'Title' in metadata.info && typeof metadata.info['Title'] === 'string' && metadata.info['Title'].trim()) {
+              title = metadata.info['Title'].trim()
+            } else {
+              const urlPath = new URL(pdfUrl).pathname
+              const filename = urlPath.split('/').pop() || 'document.pdf'
+              title = filename.replace(/\.pdf$/i, '')
+            }
           }
         } catch (err) {
-          try {
-            const urlPath = new URL(pdfUrl).pathname
-            const filename = urlPath.split('/').pop() || 'document.pdf'
-            title = filename.replace(/\.pdf$/i, '')
-          } catch {
-            title = 'Untitled PDF'
+          if (!originalFilename) {
+            try {
+              const urlPath = new URL(pdfUrl).pathname
+              const filename = urlPath.split('/').pop() || 'document.pdf'
+              title = filename.replace(/\.pdf$/i, '')
+            } catch {
+              title = 'Untitled PDF'
+            }
           }
         }
         
@@ -444,6 +460,17 @@ export default function PDFViewerClient({ pdfUrl, startPage = 1 }: PDFViewerClie
     <div className="fixed inset-0 bg-gray-50 overflow-auto">
       {/* Controls */}
       <div className="fixed top-4 left-4 z-20 flex flex-col gap-2">
+        {/* Home Button */}
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => router.push("/")}
+          className="bg-white bg-opacity-90 text-blue-600 hover:text-blue-700 hover:bg-blue-50 border border-gray-200 shadow-sm"
+          title="Back to Home"
+        >
+          <Home className="h-4 w-4" />
+        </Button>
+
         {/* Search Button */}
         <Button
           variant="secondary"

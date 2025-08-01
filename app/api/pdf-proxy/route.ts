@@ -9,14 +9,10 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Handle double-encoded URLs by decoding twice
     let decodedUrl = decodeURIComponent(url)
     decodedUrl = decodeURIComponent(decodedUrl)
-    
-    // Fix malformed duplicate protocols like "https://https:/" or "https://https://"
     decodedUrl = decodedUrl.replace(/^https?:\/\/https?:\/?\/?/, 'https://')
     
-    console.log('Fixed URL:', decodedUrl)
     new URL(decodedUrl)
     
     const response = await fetch(decodedUrl, {
