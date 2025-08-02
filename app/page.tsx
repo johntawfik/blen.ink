@@ -6,13 +6,13 @@ import { Input } from "@/components/ui/input"
 import { ArrowUp, BookOpen, Upload, FileText } from "lucide-react"
 import { useRouter } from "next/navigation"
 import ReadingList from "@/components/reading-list"
+import PDFShowcase from "@/components/pdf-showcase"
 import { readingProgress } from "@/lib/reading-progress"
 
 export default function DupeApp() {
   const [searchValue, setSearchValue] = useState("")
   const [showReadingList, setShowReadingList] = useState(false)
   const [hasBooks, setHasBooks] = useState(false)
-  const [showImageBackground, setShowImageBackground] = useState(true)
   const [isDragOver, setIsDragOver] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -26,14 +26,7 @@ export default function DupeApp() {
     setShowReadingList(false)
   }, [])
 
-  // Handle the fade effect timing
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowImageBackground(false)
-    }, 3500) // Show image for 3.5 seconds, then start fade
 
-    return () => clearTimeout(timer)
-  }, [])
 
   const handleSearch = () => {
     if (searchValue.trim()) {
@@ -152,7 +145,7 @@ export default function DupeApp() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gray-50">
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Hidden file input */}
       <input
         ref={fileInputRef}
@@ -162,26 +155,15 @@ export default function DupeApp() {
         className="hidden"
       />
 
-      {/* Book covers background with fade effect */}
-      <div
-        className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-2000 ease-out ${
-          showImageBackground ? 'opacity-100' : 'opacity-0'
-        }`}
-        style={{
-          backgroundImage: `url('/leaf.png')`,
-        }}
-        role="img"
-        aria-label="Background featuring abstract leaf design"
-      />
+      {/* PDF Showcase Background */}
+      <PDFShowcase />
 
       {/* Top right reading list link */}
       {hasBooks && (
-        <div className="absolute top-6 right-6 z-20">
+        <div className="absolute top-6 right-6 z-40">
           <div
             onClick={() => setShowReadingList(true)}
-            className={`flex items-center gap-2 cursor-pointer transition-colors duration-2000 ease-out ${
-              showImageBackground ? 'text-white' : 'text-gray-600'
-            }`}
+            className="flex items-center gap-2 cursor-pointer text-gray-800 hover:text-gray-900 transition-colors"
           >
             <BookOpen className="h-5 w-5" aria-hidden="true" />
             <span className="text-lg font-medium">Currently Reading</span>
@@ -190,19 +172,15 @@ export default function DupeApp() {
       )}
 
       {/* Main content */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
+      <div className="relative flex flex-col items-center justify-center min-h-screen px-4 pointer-events-none">
         {/* Logo */}
-        <h1 className={`text-6xl md:text-8xl font-bold mb-4 tracking-tight transition-colors duration-2000 ease-out ${
-          showImageBackground ? 'text-white' : 'text-gray-600'
-        }`}>blen</h1>
+        <h1 className="text-6xl md:text-8xl font-bold mb-4 tracking-tight text-gray-800">blen</h1>
 
         {/* Tagline */}
-        <p className={`text-xl md:text-2xl font-medium mb-8 transition-colors duration-2000 ease-out ${
-          showImageBackground ? 'text-white' : 'text-gray-600'
-        }`}>A better way to read PDFs</p>
+        <p className="text-xl md:text-2xl font-medium mb-8 text-gray-700">A better way to read PDFs</p>
 
         {/* Search interface */}
-        <div className="w-full max-w-2xl">
+        <div className="w-full max-w-2xl relative z-30 pointer-events-auto">
           <div
             className={`bg-white rounded-2xl p-6 shadow-2xl transition-all duration-200 ${
               isDragOver ? 'ring-2 ring-blue-500 bg-blue-50' : ''
